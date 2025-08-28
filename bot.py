@@ -74,7 +74,7 @@ async def on_message(message):
             logging.info(f"User {message.author}: {message.content}")
 
             messages = [
-                {"role": "system", "content": "Ты ИИ ассистент. Отвечай на запросы кратко."},
+                {"role": "system", "content": "Ты ИИ ассистент. Отвечай на запросы кратко. Отвечай на том же языке, на котором задают вопрос."},
                 {"role": "user", "content": message.content}
             ]
 
