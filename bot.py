@@ -6,7 +6,11 @@ import logging
 import argparse
 from logging.handlers import RotatingFileHandler
 
-DEFAULT_LLM = 'llama-3.1-8b-instant'
+DEFAULT_LLM = 'open-mixtral-8x7b'
+
+# proxies = {
+#     "https": "http://127.0.0.1:443"
+# }
 
 # -------- Command-line Arguments -------- #
 parser = argparse.ArgumentParser(description="Run AI Discord Bot")
@@ -29,22 +33,22 @@ logging.basicConfig(
     ]
 )
 
-# -------- Groq API call -------- #
+# -------- Mistral API call -------- #
 def query_ai(message: list, model: str, response_format: dict = None) -> str:
     response = requests.post(
-        'https://api.groq.com/openai/v1/chat/completions',
+        'https://api.mistral.ai/v1/chat/completions',
         json={
             "model": model,
             "messages": message,
-            "response_format": response_format,
         },
         headers={
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'Authorization': f'Bearer {args.ai_provider_api_key}',
-            'Content-Type': 'application/json'
-        })
+        },
+    )
     response.raise_for_status()
     content = json.loads(response.text)['choices'][0]['message']['content']
-    logging.info(f"Groq API response: {content[:100]}...")
     return content
 
 
@@ -70,7 +74,7 @@ async def on_message(message):
             logging.info(f"User {message.author}: {message.content}")
 
             messages = [
-                {"role": "system", "content": "You are AI assistant. Provide concise answers."},
+                {"role": "system", "content": "Ты ИИ ассистент. Отвечай на запросы кратко."},
                 {"role": "user", "content": message.content}
             ]
 
