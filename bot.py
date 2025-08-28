@@ -6,11 +6,8 @@ import logging
 import argparse
 from logging.handlers import RotatingFileHandler
 
-DEFAULT_LLM = 'open-mixtral-8x7b'
+DEFAULT_LLM = 'ministral-8b-2410'
 
-# proxies = {
-#     "https": "http://127.0.0.1:443"
-# }
 
 # -------- Command-line Arguments -------- #
 parser = argparse.ArgumentParser(description="Run AI Discord Bot")
@@ -34,7 +31,7 @@ logging.basicConfig(
 )
 
 # -------- Mistral API call -------- #
-def query_ai(message: list, model: str, response_format: dict = None) -> str:
+def query_ai(message: list, model: str) -> str:
     response = requests.post(
         'https://api.mistral.ai/v1/chat/completions',
         json={
@@ -80,7 +77,7 @@ async def on_message(message):
 
             response = query_ai(messages, args.llm)
 
-            await message.channel.send(response)
+            await message.reply(response)
 
             # await message.clear_reaction("⏳")
             await message.add_reaction("✅")
